@@ -22,16 +22,25 @@ from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 
 from users.views import UserViewset
-from books.views import BooksListView, BookDetailView, BooksCategoryListView
+from books.views import BooksListViewSet, BookDetailViewSet, BooksCategoryListViewSet
 
+book_detail = BookDetailViewSet.as_view({
+    'get': 'get',
+    'put': 'put',
+    'delete': 'destroy'
+})
 
 router = DefaultRouter()
 
 router.register(r'users', UserViewset, base_name="users")
+router.register(r'books', BooksListViewSet, base_name="books")
+router.register(r'books-category', BooksCategoryListViewSet, base_name="books-category")
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    # Vue index.html
     url(r'^index/', TemplateView.as_view(template_name="index.html"), name="index"),
+    # 借口文档
     url(r'docs/', include_docs_urls(title="tutorial")),
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
@@ -39,8 +48,6 @@ urlpatterns = [
     url(r'^api-token-auth/', views.obtain_auth_token),
     # jwt的认证接口
     url(r'^login/', obtain_jwt_token),
-    # Book
-    url(r'^books/$', BooksListView.as_view(), name='books'),
-    url(r'^books/(?P<pk>[0-9]+)/$', BookDetailView.as_view()),
-    url(r'^books-category/', BooksCategoryListView.as_view(), name='books_category'),
+    url(r'^books/(?P<pk>[0-9]+)/$', book_detail),
+    url(r'^books-category/', BooksCategoryListViewSet, name='books_category'),
 ]
