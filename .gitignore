@@ -1,0 +1,15 @@
+local_settings.py
+logs/*
+client/dist
+!logs/empty
+client/app/node_modules
+*.pyc
+*.log
+*.pid
+*.egg-info/
+*.sqlite3
+*.swp
+.coverage
+.idea/*
+.vscode
+.DS_Store

@@ -1,0 +1,11 @@
+# .coveragerc to control coverage.py
+[run]
+branch = False
+source =
+    app/
+omit =
+    */migrations/*.py
+    tests/
+
+[report]
+ignore_errors = True

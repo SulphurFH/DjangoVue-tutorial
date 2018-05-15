@@ -1,1 +1,1 @@
-# DjangoVue-tutorial
+# Tutorial
