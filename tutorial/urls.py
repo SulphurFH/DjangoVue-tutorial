@@ -22,13 +22,7 @@ from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 
 from users.views import UserViewset
-from books.views import BooksListViewSet, BookDetailViewSet, BooksCategoryListViewSet
-
-book_detail = BookDetailViewSet.as_view({
-    'get': 'get',
-    'put': 'put',
-    'delete': 'destroy'
-})
+from books.views import BooksListViewSet, BooksCategoryListViewSet
 
 router = DefaultRouter()
 
@@ -48,6 +42,6 @@ urlpatterns = [
     url(r'^api-token-auth/', views.obtain_auth_token),
     # jwt的认证接口
     url(r'^login/', obtain_jwt_token),
-    url(r'^books/(?P<pk>[0-9]+)/$', book_detail),
+    # url(r'^books/(?P<pk>[0-9]+)/$', book_detail),
     url(r'^books-category/', BooksCategoryListViewSet, name='books_category'),
 ]

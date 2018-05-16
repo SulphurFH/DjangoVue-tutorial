@@ -15,6 +15,8 @@ class BooksCategory(TimeModelMixin):
     )
     name = models.CharField(default="", max_length=30, verbose_name="类别名")
     category_type = models.SmallIntegerField(choices=CATEGORY_TYPE, verbose_name="类目级别")
+    parent_category = models.ForeignKey('self', null=True, blank=True,
+                                        verbose_name="父类目级别", on_delete=models.SET_NULL, related_name="sub_cat")
 
     class Meta:
         verbose_name = '类别'
@@ -31,7 +33,8 @@ class Books(TimeModelMixin):
     name = models.CharField(max_length=30, verbose_name='书名')
     price = models.IntegerField(verbose_name='价值，单位分', default=0)
     desc = models.CharField(max_length=32, verbose_name='描述', default='')
-    category = models.ForeignKey(BooksCategory, db_constraint=False, null=True, on_delete=models.SET_NULL, verbose_name="类别")
+    category = models.ForeignKey(BooksCategory, db_constraint=False, null=True,
+                                 on_delete=models.SET_NULL, verbose_name="类别")
 
     class Meta:
         verbose_name = '书籍'

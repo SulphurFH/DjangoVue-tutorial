@@ -7,42 +7,19 @@ from .models import Books, BooksCategory
 from .filters import BooksFilter
 
 
-class BooksListViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
+class BooksListViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    List:
+        书籍列表
+    """
     queryset = Books.objects.all()
     serializer_class = BooksSerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,)
     filter_fields = ('name', 'category')
     filter_class = BooksFilter
     search_fields = ('name', 'desc')
-    ordering_fields = ('id', 'price')
-
-
-class BookDetailViewSet(mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
-    serializer_class = BooksSerializer
-
-    def get_object(self, pk):
-        try:
-            return Books.objects.get(pk=pk)
-        except Books.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        book = self.get_object(pk)
-        sr = BooksSerializer(book)
-        return Response(sr.data)
-
-    def put(self, request, pk, format=None):
-        book = self.get_object(pk)
-        sr = BooksSerializer(book, data=request.data)
-        if sr.is_valid():
-            sr.save()
-            return Response(sr.data, status=status.HTTP_200_OK)
-        return Response(sr.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        book = self.get_object(pk)
-        book.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    ordering_fields = ('id', 'price', 'created_time')
+    ordering = ('-created_time',)
 
 
 class BooksCategoryListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
