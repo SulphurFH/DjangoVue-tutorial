@@ -21,13 +21,14 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 
-from users.views import UserViewset
+from users.views import UserViewset, SmsCodeViewset
 from books.views import BooksListViewSet, BooksCategoryListViewSet
 
 router = DefaultRouter()
 
 router.register(r'users', UserViewset, base_name="users")
 router.register(r'books', BooksListViewSet, base_name="books")
+router.register(r'sms-codes', SmsCodeViewset, base_name="sms-codes")
 router.register(r'books-category', BooksCategoryListViewSet, base_name="books-category")
 
 urlpatterns = [
@@ -42,6 +43,4 @@ urlpatterns = [
     url(r'^api-token-auth/', views.obtain_auth_token),
     # jwt的认证接口
     url(r'^login/', obtain_jwt_token),
-    # url(r'^books/(?P<pk>[0-9]+)/$', book_detail),
-    url(r'^books-category/', BooksCategoryListViewSet, name='books_category'),
 ]

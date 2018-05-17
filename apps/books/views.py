@@ -1,6 +1,4 @@
-from django.http import Http404
-from rest_framework import status, viewsets, mixins, filters
-from rest_framework.response import Response
+from rest_framework import viewsets, mixins, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import BooksSerializer, BooksCategorySerializer
 from .models import Books, BooksCategory
@@ -23,8 +21,8 @@ class BooksListViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixin
 
 
 class BooksCategoryListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    # queryset = BooksCategory.objects.all()
     serializer_class = BooksCategorySerializer
+    ordering = ('category_type')
 
     def get_queryset(self):
         id_min = self.request.query_params.get('id_min', 0)
@@ -32,4 +30,3 @@ class BooksCategoryListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if id_min:
             queryset = queryset.filter(pk__gt=int(id_min))
         return queryset
-        # return Response(queryset.data)

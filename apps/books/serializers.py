@@ -27,7 +27,6 @@ class BooksCategorySerializer(serializers.ModelSerializer):
 
 
 class BooksSerializer(serializers.ModelSerializer):
-    # category = BooksCategorySerializer(read_only=True)
     category_name = serializers.ReadOnlyField(source='category.name')
     category_type = serializers.ReadOnlyField(source='category.category_type')
     created_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
