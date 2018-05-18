@@ -5,8 +5,9 @@ from rest_framework.response import Response
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 
+from config.redis_conf import MobileVerifyKind
 from .serializers import UserRegSerializer, UserDetailSerializer, SmsSerializer
-from .models import VerifyCode
+from .backend import MobileVerifyCode
 
 User = get_user_model()
 
@@ -17,7 +18,7 @@ class SmsCodeViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
     serializer_class = SmsSerializer
 
-    def generate_code():
+    def generate_code(self):
         """
         生成四位数字的验证码
         :return:
@@ -34,12 +35,12 @@ class SmsCodeViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         mobile = serializer.validated_data['mobile']
-
-        code = self.generate_code()
-        # TODO 此处要有发动短信的逻辑，但是暂时没找到免费的所以先不写了，直接讲code返回了
-        code_record = VerifyCode(code=code, mobile=mobile)
-        code_record.save()
-        return Response({'code': code, 'mobile': mobile}, status=status.HTTP_201_CREATED)
+        # 此处要真对code做判断是否发送成功
+        is_success, code = MobileVerifyCode.require_send_code(mobile, MobileVerifyKind['REGISTER'])
+        if is_success:
+            return Response({'code': code, 'mobile': mobile}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=code)
 
 
 class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
