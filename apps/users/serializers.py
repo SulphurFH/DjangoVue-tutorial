@@ -62,16 +62,6 @@ class UserRegSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('验证码验证次数过多')
         elif status_code == status.HTTP_406_NOT_ACCEPTABLE:
             raise serializers.ValidationError('验证码错误')
-        # verify_records = VerifyCode.objects.filter(mobile=self.initial_data['mobile']).order_by('-add_time')
-        # if verify_records:
-            # last_verify = verify_records[0]
-            # five_minutes_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
-            # if five_minutes_ago > last_verify.add_time:
-                # raise serializers.ValidationError("验证码过期")
-            # if last_verify.code != code:
-                # raise serializers.ValidationError('验证码错误')
-        # else:
-        #     raise serializers.ValidationError('验证码错误')
 
     def validate(self, attrs):
         del attrs['code']
