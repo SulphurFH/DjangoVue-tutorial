@@ -3,7 +3,8 @@ from .models import Books
 
 
 class BooksFilter(filters.FilterSet):
-    min_prize = filters.NumberFilter(name="price", lookup_expr='gte')
+    # help_text为API文档字段说明
+    min_prize = filters.NumberFilter(name="price", lookup_expr='gte', help_text='')
     max_prize = filters.NumberFilter(name="price", lookup_expr='lte')
     name = filters.CharFilter(name="name", lookup_expr='icontains')
 

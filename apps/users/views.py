@@ -1,11 +1,14 @@
 import random
 from django.contrib.auth import get_user_model
-from rest_framework import mixins, viewsets, status, authentication
+from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 
 from config.redis_conf import MobileVerifyKind
+from libs.permissions import IsOwnerOrReadOnly
 from .serializers import UserRegSerializer, UserDetailSerializer, SmsSerializer
 from .backend import MobileVerifyCode
 
@@ -49,7 +52,14 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
     """
     serializer_class = UserRegSerializer
     queryset = User.objects.all()
-    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            return [IsAuthenticated(), ]
+        elif self.action == 'create':
+            return []
+        return []
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -73,6 +83,7 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
         return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_object(self):
+        # mixins.RetrieveModelMixin/mixins.DeleteModelMixin 都会用到
         return self.request.user
 
     def perform_create(self, serializer):

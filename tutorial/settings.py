@@ -167,7 +167,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     # 自定义分页
     'DEFAULT_PAGINATION_CLASS': 'libs.pagination.base.StandardResultsSetPagination',

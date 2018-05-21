@@ -31,11 +31,9 @@ class BooksSerializer(serializers.ModelSerializer):
     category_type = serializers.ReadOnlyField(source='category.category_type')
     created_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
     last_update = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
+    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    last_editor = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Books
         fields = '__all__'
-
-    # TODO 自定义设置create
-    # def create(self, validated_data):
-    #     pass

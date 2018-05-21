@@ -1,5 +1,8 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from libs.models.mixins import TimeModelMixin
+
+User = get_user_model()
 
 # Create your models here.
 
@@ -35,6 +38,10 @@ class Books(TimeModelMixin):
     desc = models.CharField(max_length=32, verbose_name='描述', default='')
     category = models.ForeignKey(BooksCategory, db_constraint=False, null=True,
                                  on_delete=models.SET_NULL, verbose_name="类别")
+    creator = models.ForeignKey(User, db_constraint=False, on_delete=models.SET_NULL, null=True, verbose_name="创建者",
+                                related_name='book_crt')
+    last_editor = models.ForeignKey(User, db_constraint=False, on_delete=models.SET_NULL,
+                                    null=True, verbose_name="最后修改者", related_name='book_edt')
 
     class Meta:
         verbose_name = '书籍'
